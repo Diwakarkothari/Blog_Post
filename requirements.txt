@@ -8,7 +8,7 @@ charset-normalizer==3.3.2
 click==8.1.7
 distro==1.7.0
 dnspython
-email-validator==2.1.0.post1
+email-validator==2.0.0.post2
 fasteners==0.14.1
 Flask==2.3.3
 Flask-WTF==1.1.1
