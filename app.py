@@ -10,7 +10,6 @@ import requests
 import json
 from substack import Api
 from substack.post import Post
-import markdown
 
 # https://github.com/hidevscommunity/blog_post/tree/dev
 # dckr_pat__KXzY_5Hp2UHGxkgr1KcAdmnnCg
