@@ -10,7 +10,7 @@ distro==1.7.0
 dnspython
 email-validator==2.0.0.post2
 fasteners==0.14.1
-Flask==2.3.3
+Flask==2.2.5
 Flask-WTF==1.1.1
 gunicorn==21.2.0
 idna==3.3
