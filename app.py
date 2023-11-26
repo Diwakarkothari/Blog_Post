@@ -172,7 +172,7 @@ def upload_substack(title, data, substack_email, substack_password, substack_pub
         subtitle="",
         user_id=substack_user_id
     )
-    post.add({'type': 'paragraph', 'content': z})
+    post.add({'type': 'paragraph', 'content': data})
     draft = api.post_draft(post.get_draft())
 
 
