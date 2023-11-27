@@ -15,12 +15,10 @@ from substack.post import Post
 # dckr_pat__KXzY_5Hp2UHGxkgr1KcAdmnnCg
 
 mutation = """
-mutation createStory($input: CreateStoryInput!){
-  createStory(input: $input){
-    code
-    success
-    message
+mutation PublishPost($input: PublishPostInput!) {
+  publishPost(input: $input) {
     post{
+     id
      slug
     }
   }
@@ -119,7 +117,7 @@ def publish_post_md(title, x, TOKEN):
 def upload_on_hashnode(title_article, data, hashnode_token, hashnode_publication_id, image_url):
     # hashnode
     access_token = hashnode_token
-    hashnode_url = "https://gql.hashnode.com"
+    hashnode_url = "https://gql.hashnode.com/"
 
     hashnode_header = {
         "Content-Type": "application/json",  # header of HTTP batayega ki data json format mein hai
@@ -131,26 +129,19 @@ def upload_on_hashnode(title_article, data, hashnode_token, hashnode_publication
             "input": {
                 "title": title_article,
                 "contentMarkdown": data,
-                "isPartOfPublication": {
-                    "publicationId": hashnode_publication_id
-
-                },
+                "publicationId": hashnode_publication_id,
                 "tags": [],
                 "coverImageURL": image_url
-            },
-            "publicationId": hashnode_publication_id
+            }
         }
     else:
         variables = {
             "input": {
                 "title": title_article,
                 "contentMarkdown": data,
-                "isPartOfPublication": {
-                    "publicationId": hashnode_publication_id
-                },
+                "publicationId": hashnode_publication_id,
                 "tags": []
-            },
-            "publicationId": hashnode_publication_id
+            }
         }
 
     hashnode_data = {
