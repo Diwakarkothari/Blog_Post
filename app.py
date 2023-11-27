@@ -110,7 +110,7 @@ def publish_post_md(title, x, TOKEN):
     client = Client(access_token=TOKEN)
     user = client.get_current_user()  # dictionary return hogi
     # print(user)
-    post = client.create_post(user_id=user["id"], title=title, content=x, content_format="markdown", publish_status='draft')
+    print( post = client.create_post(user_id=user["id"], title=title, content=x, content_format="markdown", publish_status='draft'))
     # return post["url"]
 
 
