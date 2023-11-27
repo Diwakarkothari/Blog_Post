@@ -110,8 +110,7 @@ def publish_post_md(title, x, TOKEN):
     client = Client(access_token=TOKEN)
     user = client.get_current_user()  # dictionary return hogi
     # print(user)
-    print( post = client.create_post(user_id=user["id"], title=title, content=x, content_format="markdown", publish_status='draft'))
-    # return post["url"]
+    client.create_post(user_id=user["id"], title=title, content=x, content_format="markdown", publish_status='draft')
 
 
 def upload_on_hashnode(title_article, data, hashnode_token, hashnode_publication_id, image_url):
