@@ -284,7 +284,7 @@ def home():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True,host='0.0.0.0')
 
 # docker build -t flask:latest .
 # docker run -i -p 5000:5000 -d flask
