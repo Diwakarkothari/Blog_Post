@@ -8,8 +8,6 @@ import os
 from medium import Client
 import requests
 import json
-from substack import Api
-from substack.post import Post
 
 # https://github.com/hidevscommunity/blog_post/tree/dev
 # dckr_pat__KXzY_5Hp2UHGxkgr1KcAdmnnCg
@@ -36,8 +34,7 @@ class UploadForm(FlaskForm):
     file = FileField("File", validators=[InputRequired()])
     title = TextAreaField("Title", validators=[InputRequired()])
     platforms = SelectMultipleField("Choose Platforms  [ctrl+click to select multiple platforms]",
-                                    choices=[('med', 'Medium'), ('dev', 'DevCommunity'), ('hn', 'HashNode'),
-                                             ('ss', 'SubStack')],
+                                    choices=[('med', 'Medium'), ('dev', 'DevCommunity'), ('hn', 'HashNode')],
                                     validators=[InputRequired()])
     # Medium frontend pe dikhayi dega  med backend mein use aayega
     image_url = URLField(label="Upload image url")
@@ -57,10 +54,6 @@ class DetailsForm(FlaskForm):
     medium_access_key = StringField(label="Medium Integration Token", validators=[InputRequired()])
     hashnode_api = StringField(label="HashNode Access Key", validators=[InputRequired()])
     hashnode_publication_id = StringField(label="Hashnode Publication ID", validators=[InputRequired()])
-    substack_email = EmailField(label='SubStack Email Address', validators=[InputRequired()])
-    substack_password = PasswordField(label="Substack password", validators=[InputRequired()])
-    substack_publication_url = StringField(label='Substack Publication URL', validators=[InputRequired()])
-    substack_user_id = StringField(label="User ID of SubStack", validators=[InputRequired()])
     submit = SubmitField(label='Create Account')
 
 
@@ -104,10 +97,10 @@ def create_post(title, content, dev_token, image_url):
 
 
 # medium
-def publish_post_md(title, x, TOKEN):
+def publish_post_md(title, x, token):
     # medium
     # TOKEN = '257c07e5d5fcda561f1188087769b63275c597a3836b8141efcb9e9b16d5f1fd8'
-    client = Client(access_token=TOKEN)
+    client = Client(access_token=token)
     user = client.get_current_user()  # dictionary return hogi
     # print(user)
     client.create_post(user_id=user["id"], title=title, content=x, content_format="markdown", publish_status='draft')
@@ -151,21 +144,6 @@ def upload_on_hashnode(title_article, data, hashnode_token, hashnode_publication
     response.raise_for_status()
 
 
-def upload_substack(title, data, substack_email, substack_password, substack_publication_url, substack_user_id):
-    api = Api(
-        email=substack_email,
-        password=substack_password,
-        publication_url=substack_publication_url
-    )
-    post = Post(
-        title=title,
-        subtitle="",
-        user_id=substack_user_id
-    )
-    post.add({'type': 'paragraph', 'content': data})
-    draft = api.post_draft(post.get_draft())
-
-
 @app.route('/', methods=['GET', 'POST'])
 def base():
     return render_template('index.html')
@@ -178,10 +156,6 @@ def details():
         dev_token = form.dev_api.data
         med_token = form.medium_access_key.data
         hashnode_key = form.hashnode_api.data
-        substack_email = form.substack_email.data
-        substack_password = form.substack_password.data
-        substack_publication_url = form.substack_publication_url.data
-        substack_user_id = form.substack_user_id.data
         hashnode_publication_id = form.hashnode_publication_id.data
 
         with open("database.json", "r") as file:
@@ -191,10 +165,6 @@ def details():
             "dev_token": dev_token,
             "med_token": med_token,
             "hashnode_key": hashnode_key,
-            "substack_email": substack_email,
-            "substack_password": substack_password,
-            "substack_publication_url": substack_publication_url,
-            "substack_user_id": substack_user_id,
             "hashnode_publication_id": hashnode_publication_id
         }
         data[session['username']].update(demo)
@@ -270,13 +240,6 @@ def home():
                     hashnode_token = data[session['username']]['hashnode_key']
                     hashnode_publication_id = data[session['username']]['hashnode_publication_id']
                     upload_on_hashnode(title, content, hashnode_token, hashnode_publication_id, image_url)
-                if 'ss' in blog_site:
-                    substack_email = data[session['username']]['substack_email']
-                    substack_password = data[session['username']]['substack_password']
-                    substack_publication_url = data[session['username']]['substack_publication_url']
-                    substack_user_id = data[session['username']]['substack_user_id']
-                    upload_substack(title, content, substack_email, substack_password, substack_publication_url
-                                        , substack_user_id)
                 return "Post Added to Draft successful"
             else:
                 return "Invalid file extension. Only .md files are allowed."
@@ -284,7 +247,7 @@ def home():
 
 
 if __name__ == '__main__':
-    app.run(debug=True,host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0')
 
 # docker build -t flask:latest .
 # docker run -i -p 5000:5000 -d flask
